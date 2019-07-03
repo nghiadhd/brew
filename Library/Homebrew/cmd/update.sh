@@ -419,7 +419,7 @@ EOS
   local update_failed_file="$HOMEBREW_REPOSITORY/.git/UPDATE_FAILED"
   rm -f "$update_failed_file"
 
-  for DIR in "$HOMEBREW_REPOSITORY" "$HOMEBREW_LIBRARY"/Taps/*/*
+  for DIR in "$HOMEBREW_LIBRARY"/Taps/*/*
   do
     [[ -d "$DIR/.git" ]] || continue
     cd "$DIR" || continue
@@ -434,15 +434,8 @@ EOS
     declare UPSTREAM_BRANCH"$TAP_VAR"="$UPSTREAM_BRANCH_DIR"
     declare PREFETCH_REVISION"$TAP_VAR"="$(git rev-parse -q --verify refs/remotes/origin/"$UPSTREAM_BRANCH_DIR")"
 
-    # Force a full update if we don't have any tags.
-    if [[ "$DIR" = "$HOMEBREW_REPOSITORY" && -z "$(git tag --list)" ]]
-    then
-      HOMEBREW_UPDATE_FORCE=1
-    fi
-
     if [[ -z "$HOMEBREW_UPDATE_FORCE" ]]
     then
-      [[ -n "$SKIP_FETCH_BREW_REPOSITORY" && "$DIR" = "$HOMEBREW_REPOSITORY" ]] && continue
       [[ -n "$SKIP_FETCH_CORE_REPOSITORY" && "$DIR" = "$HOMEBREW_LIBRARY/Taps/homebrew/homebrew-core" ]] && continue
     fi
 
